@@ -1,0 +1,429 @@
+package ca.mcgill.ecse223.block.view;
+
+
+import javax.swing.JFrame;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.JTextField;
+import javax.swing.LayoutStyle.ComponentPlacement;
+
+import ca.mcgill.ecse223.block.controller.Block223Controller;
+import ca.mcgill.ecse223.block.controller.InvalidInputException;
+import ca.mcgill.ecse223.block.controller.TOGame;
+
+import javax.swing.JButton;
+import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.SystemColor;
+import javax.swing.JSeparator;
+
+public class GameSettingUI {
+
+	private static JFrame frame;
+	private static JTextField nameTXT;
+	private static JTextField XSpeedTXT;
+	private static JTextField YSpeedTXT;
+	private static JTextField speedFactorTXT;
+	private static JTextField minLengthTXT;
+	private static JTextField maxLengthTXT;
+	private static JLabel errorMsg;
+	private static JTextField numLevelsTXT;
+	private static JTextField numBlockTXT;
+
+	/**
+	 * Initialize the contents of the frame.
+	 * @wbp.parser.entryPoint
+	 */
+	public static void init() {
+		frame = new JFrame("Game Settings");
+		frame.setVisible(true);
+		frame.setBounds(100, 100, 825, 671);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setBackground(new Color(106,108,110));
+		JLabel lblGameName = new JLabel("Game Name :");
+		lblGameName.setForeground(new Color(255, 250, 250));
+		lblGameName.setFont(new Font("Century Gothic", Font.BOLD, 15));
+		
+		nameTXT = new JTextField();
+		nameTXT.setColumns(10);
+		
+		JLabel lblBallParameters = new JLabel("Ball Parameters: ");
+		lblBallParameters.setForeground(new Color(64, 224, 208));
+		lblBallParameters.setFont(new Font("Century Gothic", Font.BOLD, 15));
+		
+		JLabel lblMinSpeed = new JLabel("Min. Speed in X: ");
+		lblMinSpeed.setForeground(new Color(255, 250, 250));
+		lblMinSpeed.setFont(new Font("Century Gothic", Font.BOLD, 15));
+		
+		XSpeedTXT = new JTextField();
+		XSpeedTXT.setColumns(10);
+		
+		YSpeedTXT = new JTextField();
+		YSpeedTXT.setColumns(10);
+		
+		JLabel lblMinSpeedIn = new JLabel("Min. Speed in Y:");
+		lblMinSpeedIn.setForeground(new Color(255, 250, 250));
+		lblMinSpeedIn.setFont(new Font("Century Gothic", Font.BOLD, 15));
+		
+		JLabel lblSpeedIncreaseFactor = new JLabel("Speed Increase Factor: ");
+		lblSpeedIncreaseFactor.setForeground(new Color(255, 250, 250));
+		lblSpeedIncreaseFactor.setFont(new Font("Century Gothic", Font.BOLD, 15));
+		
+		speedFactorTXT = new JTextField();
+		speedFactorTXT.setColumns(10);
+		
+		JLabel lblPaddleLength = new JLabel("Paddle Length:");
+		lblPaddleLength.setForeground(new Color(64, 224, 208));
+		lblPaddleLength.setFont(new Font("Century Gothic", Font.BOLD, 15));
+		
+		JLabel lblMin = new JLabel("Min: ");
+		lblMin.setForeground(new Color(255, 250, 250));
+		lblMin.setFont(new Font("Century Gothic", Font.BOLD, 15));
+		
+		minLengthTXT = new JTextField();
+		minLengthTXT.setColumns(10);
+		
+		JLabel lblMax = new JLabel("Max:");
+		lblMax.setForeground(new Color(255, 250, 250));
+		lblMax.setFont(new Font("Century Gothic", Font.BOLD, 15));
+		
+		maxLengthTXT = new JTextField();
+		maxLengthTXT.setColumns(10);
+		
+		JButton btnAddNewBlock = new JButton("Add New Block");
+		btnAddNewBlock.setBackground(new Color(51, 0, 153));
+		btnAddNewBlock.setForeground(new Color(51, 102, 204));
+		btnAddNewBlock.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+		btnAddNewBlock.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				addNewBlocks();
+			}
+		});
+		JButton btnUpdateOldBlocks = new JButton("Update Old Blocks");
+		btnUpdateOldBlocks.setBackground(new Color(51, 0, 204));
+		btnUpdateOldBlocks.setForeground(new Color(51, 102, 204));
+		btnUpdateOldBlocks.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+		btnUpdateOldBlocks.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				updateOldBlocks();
+			}
+		});
+		JButton btnLevelDesign = new JButton("Level Design");
+		btnLevelDesign.setForeground(new Color(51, 102, 204));
+		btnLevelDesign.setBackground(new Color(51, 0, 204));
+		btnLevelDesign.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+		btnLevelDesign.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				levelDesign();
+			}
+		});
+		JButton btnGoBack = new JButton("Go Back");
+		btnGoBack.setForeground(new Color(204, 0, 51));
+		btnGoBack.setFont(new Font("Century Gothic", Font.BOLD, 15));
+		btnGoBack.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				goBack();
+			}
+		});
+		JButton btnSave = new JButton("Save");
+		btnSave.setForeground(new Color(0, 153, 0));
+		btnSave.setFont(new Font("Century Gothic", Font.BOLD, 15));
+		btnSave.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				save();
+			}
+		});
+		errorMsg = new JLabel("");
+		errorMsg.setForeground(Color.RED);
+		
+		JLabel lblNumberOfLevels = new JLabel("Number of levels (1..99) :");
+		lblNumberOfLevels.setForeground(new Color(255, 250, 250));
+		lblNumberOfLevels.setFont(new Font("Century Gothic", Font.BOLD, 15));
+		
+		numLevelsTXT = new JTextField();
+		numLevelsTXT.setColumns(10);
+		
+		JLabel lblNumberOfBlocks = new JLabel("Number of Blocks per Level:");
+		lblNumberOfBlocks.setForeground(new Color(245, 255, 250));
+		lblNumberOfBlocks.setFont(new Font("Century Gothic", Font.BOLD, 15));
+		
+		numBlockTXT = new JTextField();
+		numBlockTXT.setColumns(10);
+		
+		JButton btnUpdateGame = new JButton("Update Game");
+		btnUpdateGame.setForeground(new Color(51, 102, 204));
+		btnUpdateGame.setBackground(new Color(51, 0, 204));
+		btnUpdateGame.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+		btnUpdateGame.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				updateGame();
+			}
+		});
+		refresh();
+		
+		JButton btnPublishGame = new JButton("Publish Game");
+		btnPublishGame.setForeground(new Color(0, 153, 0));
+		btnPublishGame.setBackground(new Color(51, 0, 204));
+		btnPublishGame.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+		btnPublishGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				publishGame();
+			}
+		});
+		
+		JButton btnTestGame = new JButton("Test Game");
+		btnTestGame.setForeground(new Color(51, 102, 204));
+		btnTestGame.setBackground(new Color(0, 0, 153));
+		btnTestGame.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+		btnTestGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				testGame();
+			}
+		});
+		
+		JSeparator separator = new JSeparator();
+		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(29)
+							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+											.addGroup(groupLayout.createSequentialGroup()
+												.addGap(53)
+												.addComponent(lblMin)
+												.addGap(18)
+												.addComponent(minLengthTXT, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
+												.addPreferredGap(ComponentPlacement.RELATED, 339, Short.MAX_VALUE)
+												.addComponent(lblMax)
+												.addPreferredGap(ComponentPlacement.RELATED))
+											.addGroup(groupLayout.createSequentialGroup()
+												.addGap(9)
+												.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+													.addComponent(btnLevelDesign, GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
+													.addComponent(btnAddNewBlock, Alignment.LEADING))
+												.addPreferredGap(ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
+												.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+													.addComponent(btnPublishGame, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+													.addComponent(btnUpdateOldBlocks, GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE))
+												.addGap(25)))
+										.addGroup(groupLayout.createSequentialGroup()
+											.addComponent(btnGoBack)
+											.addPreferredGap(ComponentPlacement.RELATED)))
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+										.addGroup(groupLayout.createSequentialGroup()
+											.addGap(18)
+											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+												.addComponent(btnTestGame, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+												.addComponent(btnUpdateGame, GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
+												.addComponent(maxLengthTXT, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE))
+											.addGap(30))
+										.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+											.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+											.addComponent(btnSave)
+											.addGap(70))))
+								.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+									.addGroup(groupLayout.createSequentialGroup()
+										.addComponent(lblSpeedIncreaseFactor)
+										.addGap(18)
+										.addComponent(speedFactorTXT, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+									.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+										.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+											.addGroup(groupLayout.createSequentialGroup()
+												.addComponent(lblGameName)
+												.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+												.addComponent(nameTXT, GroupLayout.PREFERRED_SIZE, 260, GroupLayout.PREFERRED_SIZE)
+												.addGap(226))
+											.addGroup(groupLayout.createSequentialGroup()
+												.addComponent(lblNumberOfLevels)
+												.addPreferredGap(ComponentPlacement.UNRELATED)
+												.addComponent(numLevelsTXT, 0, 0, Short.MAX_VALUE)
+												.addGap(46)
+												.addComponent(lblNumberOfBlocks)
+												.addGap(18)
+												.addComponent(numBlockTXT, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE))
+											.addComponent(lblBallParameters)
+											.addGroup(groupLayout.createSequentialGroup()
+												.addComponent(lblMinSpeed)
+												.addGap(31)
+												.addComponent(XSpeedTXT, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+												.addGap(134)
+												.addComponent(lblMinSpeedIn)
+												.addGap(18)
+												.addComponent(YSpeedTXT, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+										.addGap(100)
+										.addComponent(separator, GroupLayout.PREFERRED_SIZE, 1, GroupLayout.PREFERRED_SIZE)
+										.addGap(42))
+									.addComponent(lblPaddleLength))))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(56)
+							.addComponent(errorMsg, GroupLayout.PREFERRED_SIZE, 574, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap())
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(23)
+					.addComponent(errorMsg)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblGameName)
+						.addComponent(nameTXT, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(30)
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblNumberOfLevels)
+						.addComponent(numLevelsTXT, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblNumberOfBlocks)
+						.addComponent(numBlockTXT, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(separator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap())
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(6)
+							.addComponent(lblBallParameters)
+							.addGap(18)
+							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblMinSpeed)
+								.addComponent(XSpeedTXT, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblMinSpeedIn)
+								.addComponent(YSpeedTXT, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(33)
+							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblSpeedIncreaseFactor)
+								.addComponent(speedFactorTXT, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(32)
+							.addComponent(lblPaddleLength)
+							.addGap(33)
+							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblMax)
+								.addComponent(minLengthTXT, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblMin)
+								.addComponent(maxLengthTXT, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(44)
+							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(btnAddNewBlock)
+								.addComponent(btnUpdateGame)
+								.addComponent(btnUpdateOldBlocks))
+							.addGap(52)
+							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(btnLevelDesign)
+								.addComponent(btnPublishGame, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(btnTestGame, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE))
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(18)
+									.addComponent(btnGoBack))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(27)
+									.addComponent(btnSave)))
+							.addGap(13))))
+		);
+		frame.getContentPane().setLayout(groupLayout);
+	}
+	
+	protected static void testGame() {
+		try {
+			Block223Controller.selectTestGame();
+			frame.dispose();
+			TestGameUI testing=new TestGameUI();
+		} catch (InvalidInputException e) {
+			errorMsg.setText(e.getMessage());
+		}
+	}
+
+	protected static void publishGame() {
+		try {
+			Block223Controller.publishGame();
+			Block223Controller.saveGame();
+			frame.dispose();
+			AdminDashBoardUI.init();
+		} catch (InvalidInputException e) {
+			errorMsg.setText(e.getMessage());
+		}
+	}
+
+	protected static void updateGame() {
+		int levels;
+		int numBlocks;
+		int xspeed;
+		int yspeed;
+		double speedFactor;
+		int minLength;
+		int maxLength;
+		try {
+		 levels=Integer.parseInt(numLevelsTXT.getText());
+		 numBlocks=Integer.parseInt(numBlockTXT.getText());
+		 xspeed=Integer.parseInt(XSpeedTXT.getText());
+		 yspeed=Integer.parseInt(YSpeedTXT.getText());
+		 speedFactor=Double.parseDouble(speedFactorTXT.getText());
+		 minLength=Integer.parseInt(minLengthTXT.getText());
+		 maxLength=Integer.parseInt(maxLengthTXT.getText());
+		}catch(NumberFormatException e) {
+			errorMsg.setText("Please enter number only in the fields other than name");
+			return;
+		}
+		try {
+			Block223Controller.updateGame(nameTXT.getText(),levels,numBlocks,xspeed,yspeed,
+					speedFactor,maxLength,minLength);
+		} catch (Exception e) {
+			errorMsg.setText(e.getMessage());
+			return;
+		}
+		errorMsg.setText("");
+	}
+
+	protected static void levelDesign() {
+		frame.dispose();
+		LevelSettingUI.init();
+		
+	}
+	protected static void addNewBlocks() {
+	
+		frame.dispose();
+		NewBlockUI.init();
+	}
+
+
+	protected static void updateOldBlocks() {
+		
+		frame.dispose();
+		
+		UpdateBlockUI.init();
+	}
+	private static void goBack() {
+		frame.dispose();
+		AdminDashBoardUI.init();
+		
+	}
+	private static void refresh() {
+		try {
+			TOGame temp=Block223Controller.getCurrentDesignableGame();
+			nameTXT.setText(temp.getName());
+			 XSpeedTXT.setText(temp.getMinBallSpeedX()+"");
+			YSpeedTXT.setText(temp.getMinBallSpeedY()+"");
+			speedFactorTXT.setText(temp.getBallSpeedIncreaseFactor()+"");
+			minLengthTXT.setText(temp.getMinPaddleLength()+"");
+			 maxLengthTXT.setText(temp.getMaxPaddleLength()+"");
+			 numLevelsTXT.setText(temp.getNrLevels()+"");
+			 numBlockTXT.setText(temp.getNrBlocksPerLevel()+"");
+		} catch (InvalidInputException e) {
+			errorMsg.setText(e.getMessage());
+		}		
+	}
+	private static void save() {
+		try {
+			Block223Controller.saveGame();
+		} catch (InvalidInputException e) {
+			errorMsg.setText(e.getMessage());
+		}
+	}
+}
